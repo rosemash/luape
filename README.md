@@ -13,7 +13,7 @@ Usage: `fuser.exe <luastub.bin> <source OR file:source.lua> <output.exe>`
 
 For example, if you have a file called hello.lua in the same directory as the fuser and stub that you wish to fuse into hello.exe: `fuser.exe luastub.bin file:hello.lua hello.exe`.
 
-# Does it work with compiled lua bytecode?
+# Does it work with compiled Lua bytecode?
 
 In my tests, it complained about a bad Lua header. I couldn't figure out why. My best guess is a version mismatch, but both the library and the Lua version on my system are Lua 5.1.5. If you want to try it, you'll have to modify the fuser script to write the size of the chunk to the .lua section, then read it in main.c so it can be passed to luaL_loadbuffe.
 
@@ -33,6 +33,8 @@ I have only tested compilation on Debian Buster using MinGW. To follow in my foo
 
 Then run `./build.sh` in the project root. I'm pretty sure all other dependencies are included in the project.
 
-If you are on a different system, **MAKE SURE TO STRIP DEBUG SYMBOLS!!** I can't stress this enough. That's what the -s flag is doing in the build script. The hack you're doing expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
+If you are on a different system, **MAKE SURE TO STRIP DEBUG SYMBOLS!** I can't stress this enough. That's what the `-s` flag is doing in the build script. The hack expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
 
-If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it. Run `python2 python/hack.py` to do the hack. It uses an abandoned PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but the bootstrapping of fuser.exe would be far more complicated without it, so please let me know if you find its original home) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`.
+If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it.
+
+Run `python2 python/hack.py` to do the hack. It uses an abandoned PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`.
