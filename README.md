@@ -3,7 +3,7 @@ A simple Windows executable that frankensteins with Lua to create portable scrip
 
 # How does it work?
 
-You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked to it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which can run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script compiled and embedded to the stub.
+You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked into it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which can run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script compiled and embedded to the stub.
 
 # How do I use it?
 
@@ -28,3 +28,15 @@ When you're ready, run `./build.sh` in the project root.
 If you are on a different system or using a different compiler with a different configuration, **MAKE SURE TO STRIP DEBUG SYMBOLS!** That's what the `-s` flag is doing in `build.sh`. The hack we're doing expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
 
 If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it. Run `python2 python/hack.py` to do the hack. It uses a PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`.
+
+# Why?
+
+I've always wanted something like this, but never found something that met my needs. My wishes were:
+
+- To distribute simple standalone Lua scripts to anyone
+
+- To require no dependencies on the end user's PC (everything self-cotnained)
+
+- To require no dependencies or complicated steps on the system packaging the script
+
+While I came across projects that met some of these requirements (mostly the 1st and 2nd), nothing was completely satisfying. So one night I stayed up all night and hacked this together. I did it mostly to prove a point to my friends, but looking back, I can't pinpoint what the point was. Regardless, I now have the tool I wished for.
