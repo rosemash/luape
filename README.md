@@ -25,7 +25,7 @@ I already had Lua 5.1.5 working on my system. I didn't get LuaJIT for 2 reasons:
 
 This is tricky, because the method of building involves doing a lot of things to the compiled executable, and it may break with other configurations.
 
-I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `python2` and `mingw-w64`. I'm pretty sure all other dependencies are included in the project.
+I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `python2`, `mingw-w64`, and `wine32` for the bootstrap step. I'm pretty sure all other dependencies are included in the project.
 
 When you're ready, run `./build.sh` in the project root.
 
