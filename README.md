@@ -3,7 +3,7 @@ A simple Windows executable that frankensteins with Lua to create portable scrip
 
 # How does it work?
 
-You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked to it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which should then be able to run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script compiled and embedded to the stub.
+You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked to it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which can run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script compiled and embedded to the stub.
 
 # How do I use it?
 
