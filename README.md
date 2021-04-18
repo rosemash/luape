@@ -35,8 +35,13 @@ I've always wanted something like this, but never found something that met my ne
 
 - To distribute simple standalone Lua scripts to anyone
 
-- To require no dependencies on the end user's PC (everything self-cotnained)
+- To require no dependencies on the end user's PC (everything self-contained)
 
 - To require no dependencies or complicated steps on the system packaging the script
 
 While I came across projects that met some of these requirements (mostly the 1st and 2nd), nothing was completely satisfying. So one night I stayed up all night and hacked this together. I did it mostly to prove a point to my friends, but looking back, I can't pinpoint what the point was. Regardless, I now have the tool I wished for.
+
+# Can I use it in my project.
+
+[Yes.](https://github.com/rosemash/luape/blob/master/LICENSE) Just don't be upset if it breaks.
+
