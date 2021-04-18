@@ -27,8 +27,9 @@ int main(int argc, char* argv[]) {
 	lua_setglobal(L, "arg");
 
 	// attempt to load the lua script, wherever it may be
-	const char* source = (const char*)MAGIC_POINTER;
-	luaL_loadbuffer(L, source, strlen(source), "=lua");
+	uint32_t size = *(uint32_t*)MAGIC_POINTER;
+	const char* source = (const char*)MAGIC_POINTER + 0x4;
+	luaL_loadbuffer(L, source, size, "=lua");
 
 	// basic execute + error handling
 	if (lua_type(L, -1) == LUA_TFUNCTION)

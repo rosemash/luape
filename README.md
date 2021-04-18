@@ -3,7 +3,7 @@ A simple Windows executable that frankensteins with Lua to create portable scrip
 
 # How does it work?
 
-You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked to it. It looks for a string in memory and tries to execute it as a Lua script. Said string actually resides in a PE section called .lua, which is empty and has a size of 0 unless the stub is modified. That modification is done by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will make a copy of `luastub.bin` with the Lua script embedded, which should then be able to run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script appended to the stub.
+You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked to it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which should then be able to run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script compiled and embedded to the stub.
 
 # How do I use it?
 
@@ -12,10 +12,6 @@ You can build it (not recommended) or download it from [here](https://github.com
 Usage: `fuser.exe <luastub.bin> <source OR file:source.lua> <output.exe>`
 
 For example, if you have a file called hello.lua in the same directory as the fuser and stub that you wish to fuse into hello.exe: `fuser.exe luastub.bin file:hello.lua hello.exe`.
-
-# Does it work with compiled Lua bytecode?
-
-In my tests, it complained about a bad Lua header. I couldn't figure out why. My best guess is a version mismatch, but both the library and the Lua version on my system are Lua 5.1.5. If you want to try it, you'll have to modify the fuser script to write the size of the chunk to the .lua section, then read it in main.c so it can be passed to luaL_loadbuffer.
 
 # Why not LuaJIT?
 

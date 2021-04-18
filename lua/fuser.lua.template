@@ -5,13 +5,22 @@ end
 
 local buff = ""
 
+local function encodeUnsignedInt(n)
+	local encoded = ""
+	for i = 1, 4 do
+		encoded = encoded .. string.char(n % 256)
+		n = n/256
+	end
+	return encoded
+end
+
 local function skipAndAdd(file, offset, num)
 	buff = buff .. file:read(offset)
 	local dword = 0
 	for c in file:read(0x4):reverse():gmatch(".") do dword = dword * 256 + c:byte() end
 	dword = dword + num
 	print(("0x%.08x %d->%d"):format(file:seek()-4, dword-num, dword))
-	for i=1,4 do buff=buff..("").char(dword % 256)dword = dword/256 end
+	buff = buff .. encodeUnsignedInt(dword)
 end
 
 local source = arg[2]
@@ -22,14 +31,19 @@ if filename then
 	input:close()
 end
 
-local stub = io.open(arg[1], "rb")
+local func, errmsg = loadstring(source, "=fuser")
+if not func then
+	print("error compiling lua source: " .. errmsg)
+	return
+end
+source = string.dump(func)
+source = encodeUnsignedInt(#source) .. source
 
+local stub = io.open(arg[1], "rb")
 skipAndAdd(stub, 0x{o1:08x}, #source)
 skipAndAdd(stub, 0x{o2:08x}, #source)
 skipAndAdd(stub, 0x{o3:08x}, #source)
-
 buff = buff .. stub:read("*all") .. source
-
 stub:close()
 
 local output = io.open(arg[3], "wb")
