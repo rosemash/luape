@@ -23,11 +23,13 @@ if filename then
 end
 
 local stub = io.open(arg[1], "rb")
+
 skipAndAdd(stub, 0x{o1:08x}, #source)
 skipAndAdd(stub, 0x{o2:08x}, #source)
 skipAndAdd(stub, 0x{o3:08x}, #source)
 
 buff = buff .. stub:read("*all") .. source
+
 stub:close()
 
 local output = io.open(arg[3], "wb")

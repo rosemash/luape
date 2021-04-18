@@ -15,7 +15,7 @@ For example, if you have a file called hello.lua in the same directory as the fu
 
 # Does it work with compiled Lua bytecode?
 
-In my tests, it complained about a bad Lua header. I couldn't figure out why. My best guess is a version mismatch, but both the library and the Lua version on my system are Lua 5.1.5. If you want to try it, you'll have to modify the fuser script to write the size of the chunk to the .lua section, then read it in main.c so it can be passed to luaL_loadbuffe.
+In my tests, it complained about a bad Lua header. I couldn't figure out why. My best guess is a version mismatch, but both the library and the Lua version on my system are Lua 5.1.5. If you want to try it, you'll have to modify the fuser script to write the size of the chunk to the .lua section, then read it in main.c so it can be passed to luaL_loadbuffer.
 
 # Why not LuaJIT?
 
