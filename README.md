@@ -25,16 +25,10 @@ I already had Lua 5.1.5 working on my system. I didn't get LuaJIT for 2 reasons:
 
 This is tricky, because the method of building involves doing a lot of things to the compiled executable, and it may break with other configurations.
 
-I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure the following dependencies are installed:
+I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `python` and `mingw-w64`. I'm pretty sure all other dependencies are included in the project.
 
-* `python2`
+When you're ready, run `./build.sh` in the project root.
 
-* `mingw-w64`
+If you are on a different system or using a different compiler with a different configuration, **MAKE SURE TO STRIP DEBUG SYMBOLS!** That's what the `-s` flag is doing in `build.sh`. The hack we're doing expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
 
-Then run `./build.sh` in the project root. I'm pretty sure all other dependencies are included in the project.
-
-If you are on a different system, **MAKE SURE TO STRIP DEBUG SYMBOLS!** I can't stress this enough. That's what the `-s` flag is doing in the build script. The hack expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
-
-If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it.
-
-Run `python2 python/hack.py` to do the hack. It uses an abandoned PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`.
+If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it. Run `python2 python/hack.py` to do the hack. It uses an abandoned PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`.
