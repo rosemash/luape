@@ -31,7 +31,7 @@ if filename then
 	input:close()
 end
 
-local func, errmsg = loadstring(source, "=fuser")
+local func, errmsg = loadstring(source, "=lua")
 if not func then
 	print("error compiling lua source: " .. errmsg)
 	return
