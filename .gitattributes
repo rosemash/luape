@@ -1,2 +1,2 @@
 *.py linguist-detectable=false
-
+*.lua.template linguist-language=Lua
