@@ -1,2 +1,2 @@
-*.py linguist-detectable=false
-*.lua.template linguist-language=Lua
+python/deps/* linguist-detectable=false
+lua/*.lua.* linguist-language=Lua
