@@ -3,7 +3,7 @@ A simple Windows executable that frankensteins with Lua to create portable scrip
 
 # How does it work?
 
-You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked into it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which can run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script compiled and embedded to the stub.
+You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple Windows executable with the Lua runtime statically linked into it. It looks for Lua bytecode in memory and tries to run it. Said bytecode actually resides in a PE section called .lua, which is empty and has a size of 0 by default. The bytecode is patched into the .lua section by `fuser.exe`, which takes 3 arguments: the stub file, a Lua script, and the output filename. The fuser will compile the script, then make a copy of `luastub.bin` with the bytecode embedded, which can run without external dependencies. In fact, `fuser.exe` itself is nothing more than a Lua script merged with the stub.
 
 # How do I use it?
 
@@ -11,7 +11,7 @@ You can build it (not recommended) or download it from [here](https://github.com
 
 Usage: `fuser.exe <luastub.bin> <source OR file:source.lua> <output.exe>`
 
-For example, if you have a file called hello.lua in the same directory as the fuser and stub that you wish to fuse into hello.exe: `fuser.exe luastub.bin file:hello.lua hello.exe`.
+For example, if you have a file called hello.lua in the same directory as the fuser and stub that you wish to compile into hello.exe: `fuser.exe luastub.bin file:hello.lua hello.exe`.
 
 # Why not LuaJIT?
 
