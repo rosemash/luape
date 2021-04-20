@@ -18,13 +18,14 @@ int main(int argc, char* argv[]) {
 	luaL_openlibs(L);
 
 	// pass C command line arguments onto the lua script (as global "arg")
-	lua_createtable(L, argc+1, 0);
+	lua_createtable(L, argc, 0);
 	for (int i = 0; i < argc; i++)
 	{
 		lua_pushstring(L, argv[i]);
 		lua_rawseti(L, -2, i);
 	}
 	lua_setglobal(L, "arg");
+	luaL_checkstack(L, argc, "too many arguments to script");
 
 	// attempt to load the lua script, wherever it may be
 	uint32_t size = *(uint32_t*)MAGIC_POINTER;
