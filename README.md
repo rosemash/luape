@@ -13,10 +13,6 @@ Usage: `fuser.exe <luastub.bin> <source OR file:source.lua> <output.exe>`
 
 For example, if you have a file called hello.lua in the same directory as the fuser and stub that you wish to compile into hello.exe: `fuser.exe luastub.bin file:hello.lua hello.exe`.
 
-# Why not LuaJIT?
-
-I already had Lua 5.1.5 working on my system. I didn't get LuaJIT for 2 reasons: I didn't think this project would be finished, and I'm stupid and struggle with linkers. It should be easy to replace.
-
 # How do I build it?
 
 This is tricky, because the method of building involves doing a lot of things to the compiled executable, and it may break with other configurations.
