@@ -16,7 +16,7 @@ pe = pefile.PE('a.exe')
 sections = sdp.SectionDoubleP(pe)
 
 # for reasons of poetry, our exe/lua fuser will, itself, be a fused lua executable running a generated version of our fuser script
-with open('lua/fuser.lua.template', 'r') as f:
+with open('fuser.lua.template', 'r') as f:
 	fusesource = f.read()
 
 # this function adds the .lua section for scripts to live in
