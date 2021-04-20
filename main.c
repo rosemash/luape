@@ -25,7 +25,6 @@ int main(int argc, char* argv[]) {
 		lua_rawseti(L, -2, i);
 	}
 	lua_setglobal(L, "arg");
-	luaL_checkstack(L, argc, "too many arguments to script");
 
 	// attempt to load the lua script, wherever it may be
 	uint32_t size = *(uint32_t*)MAGIC_POINTER;
