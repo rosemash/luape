@@ -7,7 +7,7 @@ You will have 2 files: `fuser.exe` and `luastub.bin`. `luastub.bin` is a simple 
 
 # How do I use it?
 
-You can build it (not recommended) or download it from [here](https://github.com/rosemash/luape/releases/download/1.1.2/luape.zip). The zip contains both files precompiled.
+You can build it (not recommended) or download it from [here](https://github.com/rosemash/luape/releases/download/1.1.3/luape.zip). The zip contains both files precompiled.
 
 Usage: `fuser.exe <luastub.bin> <source OR file:source.lua> <output.exe>`
 
