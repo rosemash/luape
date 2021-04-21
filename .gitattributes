@@ -1,2 +1,3 @@
 python/deps/* linguist-detectable=false
+include/* linguist-detectable=false
 lua/*.lua.* linguist-language=Lua
