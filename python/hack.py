@@ -15,10 +15,6 @@ from deps import SectionDoubleP as sdp
 pe = pefile.PE('a.exe')
 sections = sdp.SectionDoubleP(pe)
 
-# for reasons of poetry, our exe/lua fuser will, itself, be a fused lua executable running a generated version of our fuser script
-with open('lua/fuser.lua.template', 'r') as f:
-	fusesource = f.read()
-
 # this function adds the .lua section for scripts to live in
 # characteristics (from objdump -h on the final executable): CONTENTS, ALLOC, LOAD, READONLY, DATA
 def addLuaSection(data):
@@ -33,6 +29,10 @@ pe.__data__ = pe.__data__.replace("\x37\x13\x37\x13", struct.pack("I", luaSectio
 
 # write our current edit of the PE to a file, the fuser will use it as the base for future executables
 pe.write(filename="bin/luastub.bin")
+
+# for reasons of poetry, our exe/lua fuser will, itself, be a fused lua executable running a generated version of our fuser script
+with open('lua/fuser.lua.template', 'r') as f:
+	fusesource = f.read()
 
 # the fuser script script seeks through the file linearly, adjusting 4-byte integers on its way to accomodate the size of the user-supplied script
 # to know what places to stop, it uses a relative offset from the last area edited (plus 4 bytes) so it doesn't have to re-calculate as it seeks
