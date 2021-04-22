@@ -14,7 +14,7 @@ The luape stub works on any Windows PC running Vista or greater (or older withou
 
 # How do I use it?
 
-You can build it (not recommended) or download it from [here](https://github.com/rosemash/luape/releases/download/1.1.3/luape.zip). The zip contains both files precompiled.
+You can build it (not recommended) or download one of the prebuilt versions [here](https://github.com/rosemash/luape/releases/latest). The zip contains both files precompiled.
 
 Usage: `fuser.exe <luastub.bin> <source OR file:source.lua> <output.exe>`
 
