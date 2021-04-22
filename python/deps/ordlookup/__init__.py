@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+
 """The MIT License (MIT)
 
 Copyright (c) 2004-2019 Ero Carrera
@@ -21,7 +23,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from __future__ import absolute_import
 import sys
 from . import ws2_32
 from . import oleaut32

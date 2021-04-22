@@ -1,3 +1,6 @@
+from __future__ import division
+from __future__ import print_function
+
 """The MIT License (MIT)
 
 Copyright (c) 2004-2019 Ero Carrera
@@ -40,8 +43,6 @@ gracefully.
 Copyright (c) 2005-2020 Ero Carrera <ero.carrera@gmail.com>
 """
 
-from __future__ import division
-from __future__ import print_function
 from builtins import bytes
 from builtins import chr
 from builtins import object
