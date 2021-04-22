@@ -22,7 +22,7 @@ This is tricky, because the method of building involves doing a lot of things to
 
 I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `python2`, `mingw-w64`, and `wine32`. You will need to update `_WIN32_WINNT` in `/usr/i686-w64-mingw32/include/_mingw.h` to a value of `0x0600` (Windows Vista and higher) to compile with LuaSocket, otherwise you won't have a definition for the function `inet_pton`, which is necessary for ipv6 support. There unfortunately doesn't seem to be a way to override it without changing that file.
 
-When you're ready, run `./build.sh` in the project root. If you want to compile without LuaSocket bindings, run `./build.sh nosocket`.
+When you're ready, run `./build.sh` in the project root. If you want to compile without LuaSocket bindings, run `./build.sh nosocket` instead.
 
 If you are on a different system or using a different compiler with a different configuration, **MAKE SURE TO STRIP DEBUG SYMBOLS!** That's what the `-s` flag is doing in `build.sh`. The hack we're doing expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
 
