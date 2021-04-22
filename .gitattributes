@@ -1,5 +1,0 @@
-*.sh linguist-detectable=false
-python/deps/* linguist-detectable=false
-python/hack.py linguist-detectable=false
-include/* linguist-detectable=false
-lua/*.lua.* linguist-language=Lua
