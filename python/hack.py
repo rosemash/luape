@@ -23,8 +23,8 @@ def addLuaSection(data):
 # add an empty lua section so we can look at it and determine the offsets in the file for the fuser
 pe = addLuaSection("")
 
-# update the magic pointer constant (0x13371337) in our compiled template PE to point to the new section, using... a string replace!!!
-luaSectionStart = pe.sections[-1].VirtualAddress + pe.OPTIONAL_HEADER.ImageBase
+# update the magic offset constant (0x13371337) in our compiled template PE to point to the new section, using... a string replace!!!
+luaSectionStart = pe.sections[-1].VirtualAddress
 pe.__data__ = pe.__data__.replace("\x37\x13\x37\x13", struct.pack("I", luaSectionStart))
 
 # write our current edit of the PE to a file, the fuser will use it as the base for future executables
