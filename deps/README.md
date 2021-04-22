@@ -1,6 +1,6 @@
 # Lua 5.1.5 and LuaSocket 3.0-rc1
 
-The versions of Lua 5.1.5 and LuaSocket 3.0-rc1 in this directory have been modified so that LuaSocket's socket.core and mime.core are included as built-in Lua modules. Original copyright for both projects is still intact. If you want to use these libraries, you should get unmodified versions from their original source.
+The versions of Lua 5.1.5 and LuaSocket 3.0-rc1 in this directory have been modified so that LuaSocket's `socket.core` and `mime.core` are included as built-in Lua modules. Original copyright for both projects is still intact. If you want to use these libraries, you should get unmodified versions from their original source.
 
 # Why include LuaSocket?
 
