@@ -18,15 +18,17 @@ For example, if you have a file called hello.lua in the same directory as the fu
 
 # How do I build it?
 
-This is tricky, because the method of building involves doing a lot of things to the compiled executable, and it may break with other configurations. I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `python2`, `mingw-w64`, and `wine32`, then keep reading.
+This is tricky, because the method of building involves doing unspeakable things to the compiled executable, and it might break when attempting to compile from other configurations. I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `mingw-w64`, `wine32`, and `python2` with the `future` module (`sudo apt install python-pip && sudo pip install future`), then keep reading.
+
+If your package manager can't find wine32 and you're on Debian, it's because you have to enable 32-bit packages: run `sudo dpkg --add-architecture i386`, `sudo apt update`, then try again.
 
 You will need to update `_WIN32_WINNT` in `/usr/i686-w64-mingw32/include/_mingw.h` to a value of `0x0600` (Windows Vista and higher) to compile with LuaSocket, otherwise you won't have a definition for the function `inet_pton`, which is necessary for ipv6 support. There unfortunately doesn't seem to be a way to override it without changing that file.
 
-When you're ready, run `./build.sh` in the project root. If you want to compile without LuaSocket bindings, run `./build.sh nosocket` instead.
+When you're ready, run `./build.sh` in the project root. If you want to compile without LuaSocket, run `./build.sh nosocket` instead.
 
 If you are on a different system or using a different compiler with a different configuration, **MAKE SURE TO STRIP DEBUG SYMBOLS!** That's what the `-s` flag is doing in `build.sh`. The hack we're doing expects the PE sections to be at the very end of the file. If you can somehow include symbols without spamming useless garbage to the end of the file, go ahead, but I recommend generating the simplest PE you can with your compiler settings, otherwise it's going to break.
 
-If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it. Run `python2 python/hack.py` to do the hack. It uses a PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`.
+If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it. Run `python2 python/hack.py` to do the hack. It uses a PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `fuser.exe` and `luastub.bin`, which both derive from `a.exe`. The script will then run `fuser.exe` (a fusion of the stub and `lua/fuser.lua.template`) on its own Lua source, creating a bootstrapped version of `fuser.exe` compiled with whatever Lua version we are running.
 
 # Why?
 
