@@ -51,7 +51,7 @@ pe.write(filename="bin/luape.exe")
 
 # now the moment of truth: to complete the universe, the generator executable is about to re-create itself, using itself, with no help from SectionDoubleP
 print("attempting to perform a pro gamer move")
-command = ["bin/luape.exe", fusesource, "bin/luape_bootstrapped.exe"]
+command = ["bin/luape.exe", fusesource, "bin/luape_bootstrapped.exe", "/debug", "/name=luape"]
 if sys.platform != "win32":
 	command.insert(0, "wine")
 subprocess.call(command)
