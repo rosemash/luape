@@ -18,7 +18,7 @@ Simple example: `luape.exe "print('hello world')" hello.exe`
 
 Here are the available options:
 
-* `/name` Sets the Lua chunk name to an alphanumeric string (example: `/name=happychunk`)
+* `/name=...` Sets the Lua chunk name to an alphanumeric string (example: `/name=happychunk`)
 
 * `/debug` - Include Lua debug information in the compiled chunk
 
