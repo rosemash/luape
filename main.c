@@ -25,6 +25,7 @@ int main(int argc, char* argv[]) {
 	lua_State *L = luaL_newstate();
 	luaL_openlibs(L);
 
+#ifdef LUASOCKET_C
 	// register luasocket core functions
 	lua_getfield(L, LUA_GLOBALSINDEX, "package");
 	lua_getfield(L, -1, "preload");
@@ -39,6 +40,7 @@ int main(int argc, char* argv[]) {
 	lua_setglobal(L, "mime");
 	lua_setfield(L, -2, "mime.core");
 	lua_pop(L, 2);
+#endif
 
 	// pass C command line arguments onto the lua script (as global "arg")
 	lua_createtable(L, argc, 0);
