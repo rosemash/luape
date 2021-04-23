@@ -1,25 +1,39 @@
-if #arg ~= 2 then
-	print(("%s <source OR file:source.lua> <output.exe>"):format(_FILENAME:match("^.+[/\\](.+)$") or _FILENAME))
+if #arg < 2 then
+	print(("%s <source OR file:source.lua> <output.exe> [option...]"):format(_FILENAME:match("^.+[/\\](.+)$") or _FILENAME))
 	return
+end
+
+local flags = table.concat(arg, " ", 3)
+
+local function hasFlag(name)
+	return flags:match("[/-]+" .. name) ~= nil
+end
+
+local subsystemMode = 0x3
+if hasFlag("hidden") then
+	print("output exectuable will in gui subsystem (no console)")
+	subsystemMode = 0x2
 end
 
 local buff = ""
 
-local function encodeUnsignedInt(n)
+local function encodeNumber(num, size)
 	local encoded = ""
-	for i = 1, 4 do
-		encoded = encoded .. string.char(n % 256)
-		n = n/256
+	for i = 1, size do
+		encoded = encoded .. string.char(num % 0x100)
+		num = num / 0x100
 	end
 	return encoded
 end
 
-local function seekAndWriteDword(file, offset, num)
+local function seekAndPatch(file, offset, num, size)
 	buff = buff .. file:read(offset - file:seek())
 	local existingVal = 0
-	for c in file:read(0x4):reverse():gmatch(".") do existingVal = existingVal * 256 + c:byte() end
-	print(("0x%.08x %d->%d"):format(file:seek()-4, existingVal, num))
-	buff = buff .. encodeUnsignedInt(num)
+	for c in file:read(size):reverse():gmatch(".") do existingVal = existingVal * 0x100 + c:byte() end
+	buff = buff .. encodeNumber(num, size)
+	if num ~= existingVal then
+		print(("0x%.8x %db %d->%d"):format(file:seek()-size, size, existingVal, num))
+	end
 end
 
 local source = arg[1]
@@ -36,12 +50,13 @@ if not func then
 	return
 end
 source = string.dump(func)
-source = encodeUnsignedInt(#source) .. source
+source = encodeNumber(#source, 4) .. source
 
 local self = io.open(_FILENAME, "rb")
-seekAndWriteDword(self, {o1:d}, {imagesize:d} + #source)
-seekAndWriteDword(self, {o2:d}, #source)
-seekAndWriteDword(self, {o3:d}, #source)
+seekAndPatch(self, {isizeoffs:d}, {imagesize:d} + #source, 4)
+seekAndPatch(self, {smodeoffs:d}, subsystemMode, 2)
+seekAndPatch(self, {vsizeoffs:d}, #source, 4)
+seekAndPatch(self, {rsizeoffs:d}, #source, 4)
 buff = buff .. self:read({luastart:d} - self:seek()) .. source
 self:close()
 

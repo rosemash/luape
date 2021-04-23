@@ -31,11 +31,12 @@ pe.__data__ = pe.__data__.replace("\x37\x13\x37\x13", struct.pack("I", luaSectio
 with open("lua/generator.lua.template", "r") as f:
 	fusesource = f.read()
 
-# specializing the script for this build by giving the needed numbers to generator script template (in the order they appear in the file)
+# specializing the script for this build by giving the needed numbers to generator script template
 fusesource = fusesource.format(
-	o1 = pe.OPTIONAL_HEADER.get_field_absolute_offset("SizeOfImage"),
-	o2 = pe.sections[-1].get_field_absolute_offset("Misc_VirtualSize"),
-	o3 = pe.sections[-1].get_field_absolute_offset("SizeOfRawData"),
+	isizeoffs = pe.OPTIONAL_HEADER.get_field_absolute_offset("SizeOfImage"),
+	smodeoffs = pe.OPTIONAL_HEADER.get_field_absolute_offset("Subsystem"),
+	vsizeoffs = pe.sections[-1].get_field_absolute_offset("Misc_VirtualSize"),
+	rsizeoffs = pe.sections[-1].get_field_absolute_offset("SizeOfRawData"),
 	imagesize = pe.OPTIONAL_HEADER.SizeOfImage,
 	luastart = pe.sections[-1].PointerToRawData,
 	alignment = pe.OPTIONAL_HEADER.FileAlignment	# the generator adds bytes to the end of the file to compensate for file alignment, so we supply the alignment here
