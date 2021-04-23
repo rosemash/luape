@@ -1,0 +1,53 @@
+if #arg ~= 2 then
+	print(("%s <source OR file:source.lua> <output.exe>"):format(_FILENAME:match("^.+[/\\](.+)$") or _FILENAME))
+	return
+end
+
+local buff = ""
+
+local function encodeUnsignedInt(n)
+	local encoded = ""
+	for i = 1, 4 do
+		encoded = encoded .. string.char(n % 256)
+		n = n/256
+	end
+	return encoded
+end
+
+local function seekAndWriteDword(file, offset, num)
+	buff = buff .. file:read(offset - file:seek())
+	local existingVal = 0
+	for c in file:read(0x4):reverse():gmatch(".") do existingVal = existingVal * 256 + c:byte() end
+	print(("0x%.08x %d->%d"):format(file:seek()-4, existingVal, num))
+	buff = buff .. encodeUnsignedInt(num)
+end
+
+local source = arg[1]
+local filename = source:match("^file:(.+)$")
+if filename then
+	local input = io.open(filename, "r")
+	source = input:read("*all")
+	input:close()
+end
+
+local func, errmsg = loadstring(source, "=lua")
+if not func then
+	print("error compiling lua source: " .. errmsg)
+	return
+end
+source = string.dump(func)
+source = encodeUnsignedInt(#source) .. source
+
+local self = io.open(_FILENAME, "rb")
+seekAndWriteDword(self, {o1:d}, {imagesize:d} + #source)
+seekAndWriteDword(self, {o2:d}, #source)
+seekAndWriteDword(self, {o3:d}, #source)
+buff = buff .. self:read({luastart:d} - self:seek()) .. source
+self:close()
+
+local output = io.open(arg[2], "wb")
+output:write(buff)
+output:write(("\0"):rep({alignment:d})) --to compensate for file alignment
+output:close()
+
+print(("Wrote %d bytes to %q."):format(#buff, arg[2]))

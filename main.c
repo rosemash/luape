@@ -51,6 +51,12 @@ int main(int argc, char* argv[]) {
 	}
 	lua_setglobal(L, "arg");
 
+	// set _FILENAME global (for the generator script, but scripts may use it as well)
+	char buf[MAX_PATH];
+	GetModuleFileNameA(NULL, buf, MAX_PATH);
+	lua_pushstring(L, buf);
+	lua_setglobal(L, "_FILENAME");
+
 	// attempt to load the lua script, wherever it may be
 	void* magicPointer = (void*)((intptr_t)GetModuleHandleA(NULL) + MAGIC_OFFSET);
 	uint32_t size = *(uint32_t*)(magicPointer);
