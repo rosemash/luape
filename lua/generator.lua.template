@@ -6,6 +6,7 @@
 
 if #arg < 2 then
 	print(("%s <source OR file:source.lua> <output.exe> [option...]"):format(_FILENAME:match("^.+[/\\](.+)$") or _FILENAME))
+	--todo: print options
 	return
 end
 
@@ -32,9 +33,8 @@ end
 local subsystemMode = hasFlag("hidden", 0x2, 0x3, "output executable will run in gui mode (no console)")
 local stripDebugInfo = hasFlag("debug", false, true, "lua debug info will not be stripped from the output")
 local chunkName = getFlagValue("name", "the lua chunk name will be set to %s", true)
-if chunkName and stripDebugInfo then
-	printwarning("chunk name has no effect if you don't include debug info")
-end
+if chunkName == "" then printwarning("chunk name is set to an empty string") end
+if chunkName and stripDebugInfo then printwarning("chunk name has no effect if you don't include debug info") end
 
 local function encodeNumber(num, size)
 	local encoded = ""
