@@ -1,8 +1,10 @@
+# written for fun only, may not be suitable for serious projects
+# matrix contact: @autumn:raincloud.dev
+#
 # this script is an important build step that modifies the binary compiled from main.c
 # what's happening here is very ugly, I don't expect it to build correctly on all systems
 # credit for the included libraries goes to their respective authors
-# (although I cannot find the original copy of SectionDoubleP)
-# matrix contact: @autumn:raincloud.dev
+# SectionDoubleP: https://git.n0p.cc/SectionDoubleP.git/
 #
 # when this script is called from the root of the project, it:
 # * patches in a new PE section called .lua, for lua bytcode to live in
