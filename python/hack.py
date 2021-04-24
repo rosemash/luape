@@ -1,8 +1,16 @@
-# disclaimer: this is a hack that I did for fun, there is no guarantee this will work on all systems
-# I've wanted something like this for a while and never found an equivalent
+# this script is an important build step that modifies the binary compiled from main.c
+# what's happening here is very ugly, I don't expect it to build correctly on all systems
 # credit for the included libraries goes to their respective authors
 # (although I cannot find the original copy of SectionDoubleP)
 # matrix contact: @autumn:raincloud.dev
+#
+# when this script is called from the root of the project, it:
+# * patches in a new PE section called .lua, for lua bytcode to live in
+# * updates the magic offset (0x13371337) to point to the .lua section
+# * copies the lua generator script template and tells it about all the necessary offsets
+# * creates a temporary version of the binary called bin/luape.exe with the modified template script embedded
+# * uses that version of the binary to bootstrap a final compiled version of itself
+# * overwrites the temporary binary with the final bootstrapped binary
 
 import os
 import sys
