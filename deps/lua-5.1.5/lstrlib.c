@@ -146,8 +146,9 @@ static int writer (lua_State *L, const void* b, size_t size, void* B) {
 
 static int str_dump (lua_State *L) {
   luaL_Buffer b;
+  int strip;
   luaL_checktype(L, 1, LUA_TFUNCTION);
-  int strip = lua_toboolean(L, 2);
+  strip = lua_toboolean(L, 2);
   lua_settop(L, 1);
   luaL_buffinit(L, &b);
   if (lua_dump(L, writer, &b, strip) != 0)
