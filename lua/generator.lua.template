@@ -4,37 +4,74 @@
 -- the resulting script is first patched into the host binary as plaintext, then _that_ binary is executed to bootstrap a final binary where the script is compiled
 -- when invoked, the final program will copy itself, write new bytecode this script lives, and modify the PE header using the offsets that were hard-patched into this script by hack.py
 
-if #arg < 2 then
-	print(("%s <source OR file:source.lua> <output.exe> [option...]"):format(_FILENAME:match("^.+[/\\](.+)$") or _FILENAME))
-	--todo: print options
+local source, outname --raw arguments (not options)
+
+local subsystemMode = 0x3
+local stripDebugInfo = true
+local chunkName = nil
+
+local function warn(m) print(("(warning: %s)"):format(m)) end
+local function info(m) print(("%s: %s"):format(_FILENAME:match("^.+[/\\](.+)$") or _FILENAME, m)) end
+
+local options = {{
+	hidden = {{
+		description = "output executable will run in gui mode (no console)";
+		behavior = function(self) subsystemMode = 0x2 end;
+	}};
+	debug = {{
+		description = "lua debug info will not be stripped from the output";
+		behavior = function(self) stripDebugInfo = false end;
+	}};
+	name = {{
+		description = "the lua chunk name will be set to the given string (/name=...)";
+		behavior = function(self, val) chunkName = val end;
+	}};
+}}
+
+local function printOptions()
+	info("<source OR file:source.lua> <output.exe> [option...]")
+	print("options:")
+	for k, v in pairs(options) do
+		print(("  /%s: %s"):format(k, v.description))
+	end
+end
+
+if #arg >= 2 then --minimum first 2 arguments (<source> <output>)
+	source, outname = arg[1], arg[2]
+else
+	printOptions()
 	return
 end
 
-local flags = table.concat(arg, " ", 3)
-
-local function printwarning(m) print(("(warning: %s)"):format(m)) end
-local function printoption(m) print(("option: %s"):format(m)) end
-
-local function hasFlag(name, ifyes, ifno, message)
-	local yes = flags:match("[/-]+"..name) ~= nil
-	if yes then
-		if message then printoption(message) end
-		if ifyes ~= nil then return ifyes else return true end
+for i = 3, #arg do --match all arguments thereafter
+	local option = arg[i]:match("^[/-]+(%w*)=?")
+	if option == "help" then
+		printOptions()
+		return
 	end
-	return ifno or false
+	if options[option] then
+		local value = arg[i]:match("^[/-]+%w*=(.*)")
+		options[option]:behavior(value)
+	else
+		info(("unknown option %q"):format(option or arg[i]))
+		return
+	end
 end
 
-local function getFlagValue(name, message, valueFormatMessage)
-	local value = flags:match("[/-]+"..name.."=([%w_]*)")
-	if value and message then printoption(valueFormatMessage and message:format(value) or message) end
-	return value
+if chunkName then --if user uses /name we should provide helpful warnings
+	if chunkName == "" then
+		warn("chunk name is set to an empty string")
+	else
+		print(("the chunk name will be set to %q"):format(chunkName))
+	end
+	if stripDebugInfo then
+		warn("chunk name has no effect if you don't include debug info")
+	end
 end
 
-local subsystemMode = hasFlag("hidden", 0x2, 0x3, "output executable will run in gui mode (no console)")
-local stripDebugInfo = hasFlag("debug", false, true, "lua debug info will not be stripped from the output")
-local chunkName = getFlagValue("name", "the lua chunk name will be set to %s", true)
-if chunkName == "" then printwarning("chunk name is set to an empty string") end
-if chunkName and stripDebugInfo then printwarning("chunk name has no effect if you don't include debug info") end
+
+--------------------------------
+
 
 local function encodeNumber(num, size)
 	local encoded = ""
@@ -57,14 +94,13 @@ local function seekAndPatch(file, offset, num, size)
 	end
 end
 
-local source = arg[1]
 local filename = source:match("^file:(.+)$")
 if filename then
 	local input = assert(io.open(filename, "r"), ("failed to open input file %q"):format(filename))
 	source = input:read("*all")
 	input:close()
-elseif arg[1]:match("%.lua$") and #arg[1] <= 260 then --260 is MAX_PATH
-	printwarning(("you may have meant 'file:%s'"):format(arg[1]))
+elseif source:match("%.lua$") and #source <= 260 then --260 is MAX_PATH
+	warn(("you may have meant 'file:%s'"):format(source))
 end
 
 local func, errmsg = loadstring(source, ("=%s"):format(chunkName or "lua"))
@@ -83,9 +119,9 @@ seekAndPatch(self, {rsizeoffs:d}, #source, 4)
 buff = buff .. self:read({luastart:d} - self:seek()) .. source
 self:close()
 
-local output = assert(io.open(arg[2], "wb"), ("failed to create output file %q"):format(arg[2]))
+local output = assert(io.open(outname, "wb"), ("failed to create output file %q"):format(outname))
 output:write(buff)
 output:write(("\0"):rep({alignment:d})) --to compensate for file alignment
 output:close()
 
-print(("Wrote %d bytes to %q."):format(#buff, arg[2]))
+print(("Wrote %d bytes to %q."):format(#buff, outname))
