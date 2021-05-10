@@ -1,6 +1,6 @@
 # Lua 5.1.5 and LuaSocket 3.0-rc1
 
-Modifications have been made to the Lua implementation in this directory to expose certain function arguments to the generator script, which is used by `luape.exe` to generate new Lua runtime executables with custom options. Oiginal copyright for both projects is still intact. If you wish to use these libraries, you should get unmodified versions from their original sources. Swapping this Lua version with another will cause some features to stop working, for example the choice of whether to strip debug info when dumping bytecode for the output binary.
+Modifications have been made to the Lua implementation in this directory to expose certain function arguments to the generator script, which is used by `luape.exe` to generate new Lua runtime executables with custom options. Original copyright for both projects is still intact. If you wish to use these libraries, you should get unmodified versions from their original sources. Swapping this Lua version with another will cause some features to stop working, for example the choice of whether to strip debug info when dumping bytecode for the output binary.
 
 # Why include LuaSocket?
 
