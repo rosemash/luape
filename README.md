@@ -42,7 +42,7 @@ If you are on a different system or using a different compiler with a different 
 
 If you're compiling with your own configuration, make sure the output is `a.exe` in the project root folder. It will crash if you run it. Run `python2 python/hack.py` to do the hack. It uses a PE section editing module called SectionDoubleP (it appears to be abandoned by its creator n0p, but it's invaluable) and should populate `bin` with `luape.exe`, which is a patched version of `a.exe` fused with a specialized version of `lua/generator.template.lua` generated during the build. The script will then run `luape.exe` on its own Lua source, creating a bootstrapped version of `luape.exe` compiled with whatever Lua version it's running.
 
-If the build doesn't work, I don't recommend trying again, but you do what you want.
+After a successful build, the resulting executable should have the same behavior as the one currently available on the releases page. It is recommended to test all flags to make sure.
 
 # Why?
 

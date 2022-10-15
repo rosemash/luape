@@ -2,7 +2,7 @@
 -- it is responsible for compiling lua scripts and creating executable files by copying its runtime (luape.exe)
 -- as a build step, /python/hack.py creates a copy of this template with necessary structural info about the PE, which may differ from build to build
 -- the resulting script is first patched into the host binary as plaintext, then _that_ binary is executed to bootstrap a final binary where the script is compiled
--- when invoked, the final program will copy itself, write new bytecode this script lives, and modify the PE header using the offsets that were hard-patched into this script by hack.py
+-- when invoked, the final program will copy itself, write new bytecode where this script lives, and modify the PE header using the offsets that were hard-patched by hack.py
 
 local source, outname --raw arguments (not options)
 
