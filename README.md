@@ -4,7 +4,7 @@ A simple Windows executable that frankensteins with Lua to create portable scrip
 
 # How does it work?
 
-The output of this source code is `luape.exe`, a simple Windows executable which contains 3 things: the Lua runtime, an entry function that looks for Lua code in memory and tries to run it, and a script in that memory location. The script contained there by default is designed to replace itself with any arbitrary Lua code, producing a new standalone executable.
+The output of this source code is `luape.exe`, a minimal Windows executable that simply runs a Lua script contained at a hard-coded memory offset. The script contained there by default is designed to replace itself with any arbitrary Lua code, producing a new standalone executable.
 
 The LuaSocket version of luape is compatible with Windows Vista and higher, and has access to low-level LuaSocket bindings (`socket.core` and `mime.core`). Check out the .lua files in `/deps/luasocket` to see how the official LuaSocket library scripts implement those bindings, and copy what you need into your own code for use with luape.
 
