@@ -1,6 +1,6 @@
 # luape
 
-A simple Windows executable that frankensteins with Lua to create portable scripts.
+A self-modifying Windows executable containing Lua 5.1.5 for quickly generating standalone executables that run Lua scripts.
 
 # How does it work?
 
@@ -18,11 +18,11 @@ Simple example: `luape.exe "print('hello world')" hello.exe`
 
 Here are the available options:
 
-* `/name=...` Set the Lua chunk name to an alphanumeric string (example: `/name=happychunk`)
+* `/name=...` Set the Lua chunk name to an alphanumeric string (example: `/name=myscript`)
 
 * `/debug` - Include Lua debug information in the compiled chunk
 
-* `/hidden` - Generate a PE that doesn't have a console window or GUI
+* `/hidden` - Generate a PE that doesn't open a console window or GUI
 
 Let's say you have a file called `hello.lua` in the same directory as `luape.exe` that you wish to compile into `hello.exe`, with debug information intact and the chunkname set to "myscript". This is the command you would execute: `luape.exe file:hello.lua hello.exe /debug /name=myscript`.
 
@@ -50,7 +50,7 @@ After a successful build, the resulting executable should have the same behavior
 
 I wanted to be able to easily package standalone Lua scripts as zero-dependency executable files without following complicated steps. While I came across projects that met some of these requirements (such as luastatic), nothing was completely satisfying. In particular, I didn't like the requirement to collect dependencies and compile the executable using a C compiler.
 
-Initially, I had someone tell me that this concept was impractical and pointless, adding that they would be impressed if I actually managed to create it and not make it suck. To prove them wrong, I came up with an overly-complicated solution that packaged an entire portable distribution of MinGW, along with an executable that automated putting the Lua script into a C header and compiling it with the Lua source code. They weren't impressed at all, and I wasn't a big fan of it either.
+Initially, I had someone tell me that this concept was impractical and pointless, adding that they would be impressed if I actually managed to create it and not make it suck. I came up with an overly-complicated solution that packaged an entire portable distribution of MinGW, along with an executable that automated putting the Lua script into a C header and compiling it with the Lua source code. They weren't impressed at all, and I wasn't a big fan of it either.
 
 Many years later, I had already moved on, but I created luape as a way to reconcile with this failure.
 
