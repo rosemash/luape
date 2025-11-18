@@ -30,7 +30,7 @@ Options must go after the first and second argument. If the first argument doesn
 
 # How do I build it?
 
-First keep in mind my goal with this project was to create `luape.exe`, which itself acts as a builder of other executables. Now that `luape.exe` exists, this repository is pretty much useless to me, and it only exists for archival purposes. If you want to use luape, you don't have to build it, you can just download the pre-built `luape.exe` and use it to package a Lua script.
+First keep in mind my goal with this project was to create `luape.exe`, which itself acts as a builder of other executables. Now that `luape.exe` exists, this repository is pretty much useless to me, and it only exists for archival purposes. If you want to use luape, you don't have to build it, you can just download the pre-built `luape.exe` and use it to package other Lua scripts.
 
 The method of building it is convoluted, and it might break when attempting to compile from other configurations. I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `mingw-w64`, `wine32`, and `python2` with the `future` module (`sudo apt install python-pip && sudo pip install future`), then keep reading.
 
@@ -46,7 +46,7 @@ If you're compiling with your own configuration, make sure the output is `a.exe`
 
 After a successful build, the resulting executable should have the same behavior as the one currently available on the releases page. It is recommended to test all flags to make sure.
 
-# What is the purpose of it?
+# What is the purpose of luape?
 
 I wanted to be able to easily package standalone Lua scripts as zero-dependency executable files without following complicated steps. While I came across projects that met some of these requirements (such as luastatic), nothing was completely satisfying. In particular, I didn't like the requirement to collect dependencies and compile the executable using a C compiler.
 
