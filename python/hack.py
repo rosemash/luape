@@ -1,8 +1,5 @@
-# written for fun only, may not be suitable for serious projects
-# matrix contact: @autumn:raincloud.dev
-#
-# this script is an important build step that modifies the binary compiled from main.c
-# what's happening here is very ugly, I don't expect it to build correctly on all systems
+# this is the post-build script that modifies the binary compiled from main.c to point to the Lua script
+# what's happening here is very hacky, I don't expect it to build correctly on all systems
 # credit for the included libraries goes to their respective authors
 # SectionDoubleP: https://git.n0p.cc/SectionDoubleP.git/
 #
@@ -33,15 +30,15 @@ def addLuaSection(data):
 # add an empty lua section so we can look at it and determine the needed offsets
 pe = addLuaSection("")
 
-# update the magic offset constant (0x13371337) in our compiled template PE to point to the new section, using... a string replace!!!
+# update the magic offset constant (0x13371337) in our compiled template PE to point to the new section, using a string replace
 luaSectionStart = pe.sections[-1].VirtualAddress
 pe.__data__ = pe.__data__.replace("\x37\x13\x37\x13", struct.pack("I", luaSectionStart))
 
-# for reasons of poetry, the generator will itself be a lua script appended to the binary, and soon it's going to compile itself
+# open the generator script for appending to the binary
 with open("lua/generator.lua.template", "r") as f:
 	fusesource = f.read()
 
-# specializing the script for this build by giving the needed numbers to generator script template
+# creating a specialized version of the generator script that contains the correct offsets for this specific build of the binary
 fusesource = fusesource.format(
 	isizeoffs = pe.OPTIONAL_HEADER.get_field_absolute_offset("SizeOfImage"),
 	smodeoffs = pe.OPTIONAL_HEADER.get_field_absolute_offset("Subsystem"),
@@ -56,10 +53,10 @@ fusesource = fusesource.format(
 sections.pop_back()
 pe = addLuaSection(struct.pack("I", len(bytes(fusesource))) + fusesource)
 
-# writing the initial generator program
+# writing the first version of the generator executable
 pe.write(filename="bin/luape.exe")
 
-# now the moment of truth: to complete the universe, the generator executable is about to re-create itself, using itself, with no help from SectionDoubleP
+# the generator executable re-creates itself, using itself (bootstrap step that doesn't involve SectionDoubleP, acts as a sanity check)
 print("attempting to perform a pro gamer move")
 command = ["bin/luape.exe", fusesource, "bin/luape_bootstrapped.exe", "/debug", "/name=luape"]
 if sys.platform != "win32":
@@ -70,7 +67,7 @@ subprocess.call(command)
 os.rename("bin/luape_bootstrapped.exe", "bin/luape.exe")
 print("overwrote bin/luape.exe with bin/luape_bootstrapped.exe")
 
-# delete a.exe because it's stupid and useless
+# delete a.exe (initial executable before modifications, now garbage)
 os.remove("a.exe")
 print("cleaned up debris")
 
