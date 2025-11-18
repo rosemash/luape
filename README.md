@@ -30,9 +30,11 @@ Options must go after the first and second argument. If the first argument doesn
 
 # How do I build it?
 
-This is tricky, because the method of building involves doing unspeakable things to the compiled executable, and it might break when attempting to compile from other configurations. I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `mingw-w64`, `wine32`, and `python2` with the `future` module (`sudo apt install python-pip && sudo pip install future`), then keep reading.
+First keep in mind my goal with this project was to create `luape.exe`, which itself acts as a builder of other executables. Now that `luape.exe` exists, this repository is pretty much useless to me, and it only exists for archival purposes. If you want to use luape, you don't have to build it, you can just download the pre-built `luape.exe` and use it to package a Lua script.
 
-If your package manager can't find wine32 and you're on Debian, it's because you have to enable 32-bit packages: run `sudo dpkg --add-architecture i386`, `sudo apt update`, then try again.
+The method of building it is convoluted, and it might break when attempting to compile from other configurations. I have only tested compilation on Debian Buster using MinGW. To follow in my footsteps, make sure you've installed `mingw-w64`, `wine32`, and `python2` with the `future` module (`sudo apt install python-pip && sudo pip install future`), then keep reading.
+
+If your package manager can't find wine32 and you're on Debian Buster, it's because you have to enable 32-bit packages: run `sudo dpkg --add-architecture i386`, `sudo apt update`, then try again.
 
 You will need to update `_WIN32_WINNT` in `/usr/i686-w64-mingw32/include/_mingw.h` to a value of `0x0600` (Windows Vista and higher) to compile with LuaSocket, otherwise you won't have a definition for the function `inet_pton`, which is necessary for ipv6 support. There unfortunately doesn't seem to be a way to override it without changing that file.
 
@@ -44,20 +46,14 @@ If you're compiling with your own configuration, make sure the output is `a.exe`
 
 After a successful build, the resulting executable should have the same behavior as the one currently available on the releases page. It is recommended to test all flags to make sure.
 
-# Why?
+# What is the purpose of it?
 
-I've always wanted something like this, but never found something that met my needs. My wishes were:
+I wanted to be able to easily package standalone Lua scripts as zero-dependency executable files without following complicated steps. While I came across projects that met some of these requirements (such as luastatic), nothing was completely satisfying. In particular, I didn't like the requirement to collect dependencies and compile the executable using a C compiler.
 
-- To distribute simple standalone Lua scripts to anyone
+Initially, I had someone tell me that this concept was impractical and pointless, adding that they would be impressed if I actually managed to create it and not make it suck. To prove them wrong, I came up with an overly-complicated solution that packaged an entire portable distribution of MinGW, along with an executable that automated putting the Lua script into a C header and compiling it with the Lua source code. They weren't impressed at all, and I wasn't a big fan of it either.
 
-- To require no external dependencies on the end user's PC (everything self-contained)
-
-- To require no external dependencies or complicated steps on the system packaging the script
-
-While I came across projects that met some of these requirements (mostly the 1st and 2nd), nothing was completely satisfying. So one night I stayed up all night and hacked this together.
+Many years later, I had already moved on, but I created luape as a way to reconcile with this failure.
 
 # Can I use it in my project?
 
-[Yes.](https://github.com/rosemash/luape/blob/master/LICENSE) Just don't be upset if it breaks.
-
- 
+luape is released permissively under the [MIT license](https://github.com/rosemash/luape/blob/master/LICENSE).
