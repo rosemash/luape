@@ -4,12 +4,12 @@
 # SectionDoubleP: https://git.n0p.cc/SectionDoubleP.git/
 #
 # when this script is called from the root of the project, it:
-# * patches in a new PE section called .lua, for lua bytcode to live in
+# * patches in a new PE section called .lua, where lua bytcode will be executed
 # * updates the magic offset (0x13371337) to point to the .lua section
-# * copies the lua generator script template and tells it about all the necessary offsets
+# * copies the lua generator script template and creates a version of it that hard-codes all the necessary offsets
 # * creates a temporary version of the binary called bin/luape.exe with the modified template script embedded
 # * uses that version of the binary to bootstrap a final compiled version of itself
-# * overwrites the temporary binary with the final bootstrapped binary
+# * overwrites the temporary binary with the final bootstrapped version
 
 import os
 import sys
@@ -27,14 +27,14 @@ sections = sdp.SectionDoubleP(pe)
 def addLuaSection(data):
 	return sections.push_back(Characteristics=0x40000040, Name=".lua", Data=data)
 
-# add an empty lua section so we can look at it and determine the needed offsets
+# adding an empty lua section so we can look at it and determine the needed offsets
 pe = addLuaSection("")
 
-# update the magic offset constant (0x13371337) in our compiled template PE to point to the new section, using a string replace
+# updating the magic offset constant (0x13371337) in our compiled template PE to point to the new section, using a string replace
 luaSectionStart = pe.sections[-1].VirtualAddress
 pe.__data__ = pe.__data__.replace("\x37\x13\x37\x13", struct.pack("I", luaSectionStart))
 
-# open the generator script for appending to the binary
+# opening the generator script for appending to the binary
 with open("lua/generator.lua.template", "r") as f:
 	fusesource = f.read()
 
