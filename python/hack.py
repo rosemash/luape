@@ -49,14 +49,14 @@ fusesource = fusesource.format(
 	alignment = pe.OPTIONAL_HEADER.FileAlignment	# the generator adds bytes to the end of the file to compensate for file alignment, so we supply the alignment here
 )
 
-# removing the empty lua section and replacing it with one that contains the generator script
+# removing the empty lua section and replacing it with one that contains the generator script source code in plain text
 sections.pop_back()
 pe = addLuaSection(struct.pack("I", len(bytes(fusesource))) + fusesource)
 
 # writing the first version of the generator executable
 pe.write(filename="bin/luape.exe")
 
-# the generator executable re-creates itself, using itself (bootstrap step that doesn't involve SectionDoubleP, acts as a sanity check)
+# the generator executable re-creates itself, using itself (bootstrap step that doesn't involve SectionDoubleP, compiles the Lua code and acts as a sanity check)
 print("attempting to perform a pro gamer move")
 command = ["bin/luape.exe", fusesource, "bin/luape_bootstrapped.exe", "/debug", "/name=luape"]
 if sys.platform != "win32":
