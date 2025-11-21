@@ -1,6 +1,6 @@
 # luape
 
-A self-modifying Windows executable containing Lua 5.1.5 for quickly generating standalone executables that run Lua scripts.
+A self-patching Windows executable containing Lua 5.1.5 for quickly generating standalone executables that run Lua scripts.
 
 # How does it work?
 
